@@ -1,11 +1,9 @@
-"use client";
-
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 export default function Home() {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const headingsRef = useRef<HTMLHeadingElement[]>([]);
+  const headingsRef = useRef<(HTMLHeadingElement | null)[]>([]);
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
@@ -15,7 +13,7 @@ export default function Home() {
       let currentId: string | null = null;
 
       headingsRef.current.forEach((heading) => {
-        if (heading.offsetTop <= scrollPosition) {
+        if (heading && heading.offsetTop <= scrollPosition) {
           currentId = heading.dataset.id ?? null;
         }
       });
@@ -36,7 +34,7 @@ export default function Home() {
   }, []);
 
   const handleNavClick = (id: string) => {
-    const target = headingsRef.current.find((el) => el.dataset.id === id);
+    const target = headingsRef.current.find((el) => el?.dataset.id === id);
     if (target) {
       window.scrollTo({
         top: target.offsetTop - 100,
@@ -73,7 +71,11 @@ export default function Home() {
             {section.tag === "h1" ? (
               <h1
                 data-id={section.id}
-                ref={(el) => el && (headingsRef.current[index] = el)}
+                ref={(el) => {
+                  if (el) {
+                    headingsRef.current[index] = el;
+                  }
+                }}
                 className="text-3xl font-bold mt-8"
               >
                 {section.title}
@@ -81,7 +83,11 @@ export default function Home() {
             ) : section.tag === "h2" ? (
               <h2
                 data-id={section.id}
-                ref={(el) => el && (headingsRef.current[index] = el)}
+                ref={(el) => {
+                  if (el) {
+                    headingsRef.current[index] = el;
+                  }
+                }}
                 className="text-2xl font-semibold mt-6"
               >
                 {section.title}
@@ -89,7 +95,11 @@ export default function Home() {
             ) : (
               <h3
                 data-id={section.id}
-                ref={(el) => el && (headingsRef.current[index] = el)}
+                ref={(el) => {
+                  if (el) {
+                    headingsRef.current[index] = el;
+                  }
+                }}
                 className="text-xl font-medium mt-4"
               >
                 {section.title}
